@@ -1,0 +1,284 @@
+/* ==========================================================================
+   1. CSS Variables & Global Resets
+   ========================================================================== */
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --bg-main: #f8fafc;
+  --bg-alt: #f1f5f9;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --spacing-unit: 1rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   2. Header & Navigation Animations
+   ========================================================================== */
+
+.logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary);
+  transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: translateY(-20px) rotateZ(45deg) scale(1.1);
+  
+}
+
+.site-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+}
+
+.site-nav a {
+  text-decoration: none;
+  color: var(--text-main);
+  font-weight: 500;
+  position: relative;
+  padding-bottom: 2px;
+  transition: color 0.2s ease;
+}
+
+.site-nav a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--primary);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-nav a:hover {
+  color: var(--primary);
+}
+
+.site-nav a:hover::after {
+  width: 100%;
+}
+
+/* ==========================================================================
+   3. Main Content & Keyframe Animations
+   ========================================================================== */
+.section {
+  padding: 4rem 0;
+}
+
+#projects{
+    height: 40vh;
+    padding: 0px 0px 120px 0px;
+}
+
+.bg-alt {
+  background-color: var(--bg-alt);
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-tagline {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  opacity: 0;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   4. Project Cards with Expandable Accordion-style Hover Animation
+   ========================================================================== */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  align-items: start; /* Allows cards to expand independently without pulling grid siblings */
+}
+
+.card {
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.35s ease,
+              border-color 0.35s ease;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+/* Extra content container using grid-template-rows animation for smooth dynamic expansion */
+.card-extra {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease,
+              margin-top 0.4s ease;
+  margin-top: 0;
+}
+
+.card-extra > * {
+  overflow: hidden; /* Prevents text overflow during the row expansion */
+}
+
+.card-extra {
+    height: 0px;
+}
+
+.badge {
+  display: inline-block;
+  background-color: rgba(37, 99, 235, 0.1);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.05em;
+}
+
+.card-extra p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Expanded Card Hover States */
+.card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 24px -6px rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+.card:hover .card-extra {
+  grid-template-rows: 1fr; /* Expands the row height to fit content */
+  opacity: 1;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #e2e8f0;
+  height: 135px;
+}
+
+/* Skills List */
+.skills-list {
+  list-style-type: square;
+  padding-left: 1.5rem;
+  margin-top: 1rem;
+}
+
+.skills-list li {
+  margin-bottom: 0.5rem;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.skills-list li:hover {
+  transform: translateX(6px);
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   5. Scroll Reveal Classes
+   ========================================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.delay-1 { transition-delay: 0.2s; }
+.delay-2 { transition-delay: 0.6s; }
+.delay-3 { transition-delay: 1s; }
+
+/* ==========================================================================
+   6. Footer
+   ========================================================================== */
+.site-footer {
+  text-align: center;
+  padding: 2rem 0;
+  background-color: var(--bg-card);
+  color: var(--text-muted);
+  border-top: 1px solid #e2e8f0;
+}
+
+/* ==========================================================================
+   7. Media Query & Accessibility
+   ========================================================================== */
+@media (max-width: 600px) {
+  .site-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .site-nav ul {
+    gap: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

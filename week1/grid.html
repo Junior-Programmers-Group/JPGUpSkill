@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid and Flex Example</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+        }
+        .sample {
+            background-color: antiquewhite;
+            margin: 28px;
+            height: 40vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h3 {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+        .box {
+            background-color: #ff6b6b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .grid-container {
+            display: grid;
+            /* grid-template-columns: repeat(2, 1fr);*/
+            /* grid-template-rows: repeat(2, 1fr);  */
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(100px, 1fr)
+            );
+            gap: 4px;
+            height: calc(100% - 40px);
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: stretch;
+            gap: 16px;
+            height: calc(100% - 40px);
+        }
+        .flex-container .box {
+            width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Back to Portfolio</a>
+    </nav>
+    <section class="sample">
+        <h3>Grid</h3>
+        <div class="grid-container">
+            <div class="box">1</div>
+            <div class="box">2</div>
+            <div class="box">3</div>
+            <div class="box">4</div>
+            <div class="box">5</div>
+            <div class="box">6</div>
+            <div class="box">7</div>
+            <div class="box">8</div>
+            <div class="box">9</div>
+            <div class="box">10</div>
+            <div class="box">11</div>
+            <div class="box">12</div>
+        </div>
+    </section>
+
+    <section class="sample">
+        <h3>Flex</h3>
+        <div class="flex-container">
+            <div class="box">A</div>
+            <div class="box">B</div>
+            <div class="box">C</div>
+        </div>
+    </section>
+</body>
+</html>

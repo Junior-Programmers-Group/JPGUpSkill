@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JPG UpSkill Week 1 | Ethan Van Gamat</title>
+
+  <!-- Reveal.js Core & Theme CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+
+  <!-- Highlight.js Theme for Code Snippets -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+
+  <style>
+    /* ==========================================================================
+       Custom Bright-to-Dark Red Palette & Typography
+       ========================================================================== */
+    :root {
+      --red-bright: #ff2a4b;
+      --red-mid: #dc2626;
+      --red-dark: #991b1b;
+      --red-deep: #450a0a;
+      --bg-dark: #0a0505;
+      --bg-card: rgba(255, 255, 255, 0.05);
+      --text-main: #f8fafc;
+      --text-muted: #fca5a5;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .reveal {
+      background: radial-gradient(circle at center, var(--red-deep) 0%, var(--bg-dark) 85%);
+      color: var(--text-main);
+    }
+
+    /* Headlines */
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+      color: var(--text-main);
+      text-transform: none;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .reveal h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, var(--red-bright) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .reveal h2 {
+      font-size: 1.8rem;
+      color: var(--red-bright);
+      border-bottom: 2px solid var(--red-dark);
+      padding-bottom: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    /* Layout Grids */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      text-align: left;
+    }
+
+    .grid-3col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    /* Cards & Callouts */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      border-radius: 10px;
+      padding: 1.2rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .card h3 {
+      color: var(--red-bright);
+      font-size: 1.2rem;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .analogy-box {
+      background: rgba(220, 38, 38, 0.1);
+      border-left: 4px solid var(--red-bright);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--red-mid);
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    /* Lists */
+    .reveal ul {
+      list-style: none;
+      padding-left: 0;
+      margin-left: 0;
+    }
+
+    .reveal ul li {
+      position: relative;
+      padding-left: 1.4rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    .reveal ul li::before {
+      content: "■";
+      position: absolute;
+      left: 0;
+      color: var(--red-bright);
+      font-size: 0.8rem;
+      top: 0.15rem;
+    }
+
+    /* Code Snippets */
+    .reveal pre {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      border: 1px solid var(--red-dark);
+      width: 100%;
+      font-size: 0.75rem;
+      margin: 0.8rem 0;
+    }
+
+    .reveal code {
+      font-family: 'Fira Code', Consolas, monospace;
+    }
+
+    .highlight-red {
+      color: var(--red-bright);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: Title ==================== -->
+      <section>
+        <span class="badge">JPG UpSkill Phase 1 • Foundation</span>
+        <h1>Web Foundations 101</h1>
+        <p style="font-size: 1.1rem; color: var(--text-main);">A Beginner's Guide to HTML, CSS, &amp; Markdown</p>
+        <hr style="border-color: var(--red-dark); margin: 2rem 0;">
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          <strong>Session Window:</strong> Mon Sep 14 &rarr; Sat Sep 19, 2026<br>
+          <strong>Presenter:</strong> Ethan Van Gamat<br>
+        </p>
+      </section>
+
+      <!-- ==================== SLIDE 2: The Core Concepts ==================== -->
+      <section>
+        <h2>The Anatomy of a Website</h2>
+        <div class="analogy-box">
+          <strong>Think of a website like building a house:</strong><br>
+          HTML is the structure (walls, doors), CSS is the interior design (paint, furniture), and JavaScript is the electricity (making things work). Today, we focus on the house and the paint!
+        </div>
+        <div class="grid-2col">
+          <div class="card">
+            <h3>HTML &lt;Building Block&gt;</h3>
+            <p style="font-size: 0.85rem; margin-bottom:0;"><strong>HyperText Markup Language</strong></p>
+            <ul>
+              <li>Defines the structure.</li>
+              <li>Tells the browser what is a title, what is an image, and what is a link.</li>
+              <li><em>"This is a button."</em></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>CSS &lt;The Aesthetic&gt;</h3>
+            <p style="font-size: 0.85rem; margin-bottom:0;"><strong>Cascading Style Sheets</strong></p>
+            <ul>
+              <li>Defines the visual look.</li>
+              <li>Controls colors, spacing, and layout (side-by-side vs top-to-bottom).</li>
+              <li><em>"Make the button red and rounded."</em></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 3: HTML Basics ==================== -->
+      <section>
+        <h2>HTML 101: Tags &amp; Elements</h2>
+        <p style="text-align: left; font-size: 0.9rem;">HTML uses <strong>tags</strong> wrapped in angle brackets <code class="highlight-red">&lt; &gt;</code> to wrap around content and give it meaning.</p>
+
+        <div class="grid-2col">
+          <div class="card">
+            <h3>1. Opening &amp; Closing Tags</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Most tags come in pairs. The closing tag has a forward slash <code>/</code>.</p>
+            <pre><code class="language-html">&lt;h1&gt;Welcome to my Portfolio!&lt;/h1&gt;
+&lt;p&gt;My name is Ethan.&lt;/p&gt;</code></pre>
+            <ul style="margin-top: 1rem;">
+              <li><code class="highlight-red">h1</code> = Heading 1 (Biggest text)</li>
+              <li><code class="highlight-red">p</code> = Paragraph (Normal text)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>2. Self-Closing Tags</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Some tags don't wrap text, they just insert something (like an image). They don't need a closing tag.</p>
+            <pre><code class="language-html">&lt;img src="profile.jpg" alt="My Photo"&gt;
+&lt;br&gt; &lt;!-- Line break --&gt;</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: HTML Structure & Semantics ==================== -->
+      <section>
+        <h2>Structuring a Web Page</h2>
+        <div class="analogy-box">
+          We used to put everything in a generic box called a <code>&lt;div&gt;</code>. Now, we use <strong>Semantic HTML</strong>, which means giving boxes clear names so Google and screen readers know what they are.
+        </div>
+
+        <div class="grid-2col">
+          <div class="card">
+            <h3>The HTML5 Page Layout</h3>
+            <pre><code class="language-html">&lt;body&gt;
+  &lt;header&gt;
+    &lt;nav&gt; Home | About &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;section id="about"&gt;
+      &lt;h2&gt;About Me&lt;/h2&gt;
+      &lt;p&gt;I am a developer.&lt;/p&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt; &copy; 2026 &lt;/footer&gt;
+&lt;/body&gt;</code></pre>
+          </div>
+          <div class="card">
+            <h3>Tag Definitions</h3>
+            <ul>
+              <li><strong><code class="highlight-red">&lt;header&gt;</code>:</strong> The top bar of your site.</li>
+              <li><strong><code class="highlight-red">&lt;nav&gt;</code>:</strong> Navigation links.</li>
+              <li><strong><code class="highlight-red">&lt;section&gt;</code>:</strong> A specific topic area (e.g., "About Me", "My Projects").</li>
+              <li><strong><code class="highlight-red">&lt;footer&gt;</code>:</strong> The bottom of the page.</li>
+              <li><strong><code class="highlight-red">&lt;div&gt;</code>:</strong> A generic grouping box (still useful for styling!).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: The DOM ==================== -->
+      <section>
+        <h2>JavaScript &amp; HTML: The DOM</h2>
+
+        <div class="grid-2col">
+          <div class="card">
+            <div>
+              <h3>What is the DOM?</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">The Document Object Model makes your webpage interactive!</p>
+              <ul>
+                <li><strong>Tree Structure:</strong> Browser converts HTML into a tree of object nodes.</li>
+                <li><strong>JavaScript Bridge:</strong> JS can select, read, modify, or delete any node live.</li>
+                <li><strong>Events:</strong> Listen for clicks, keypresses, or form submissions.</li>
+              </ul>
+
+              <!-- VISUALIZATION: DOM Tree Diagram -->
+              <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; margin: 16px 0; display: flex; justify-content: center;">
+                <div style="display: flex; flex-direction: column; align-items: center; font-family: monospace; font-size: 0.85rem;">
+                  <div style="background: #334155; border: 2px solid #38bdf8; color: #fff; padding: 4px 10px; border-radius: 6px;">document</div>
+                  <div style="height: 10px; width: 2px; background: #94a3b8;"></div>
+                  <div style="background: #334155; border: 2px solid #38bdf8; color: #fff; padding: 4px 10px; border-radius: 6px;">&lt;html&gt;</div>
+                  <div style="display: flex; gap: 16px; margin-top: 10px; position: relative;">
+                    <div style="background: #334155; border: 2px solid #38bdf8; color: #fff; padding: 4px 10px; border-radius: 6px;">&lt;head&gt;</div>
+                    <div style="background: #f43f5e; border: 2px solid #fff; color: #fff; padding: 4px 10px; border-radius: 6px; box-shadow: 0 0 10px rgba(244, 63, 94, 0.5);">&lt;h1&gt; (Selected)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <pre><code class="language-javascript">// Selecting an element
+      const title = document.querySelector('h1');
+
+      // Modifying element content
+      title.textContent = 'Hello World!';</code></pre>
+          </div>
+
+          <div class="card">
+            <div>
+              <h3>Modifying Styles &amp; Classes</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Dynamically update appearance based on user interactions.</p>
+              <ul>
+                <li><strong><code class="highlight-red">classList.add()</code>:</strong> Appends a new CSS class.</li>
+                <li><strong><code class="highlight-red">classList.toggle()</code>:</strong> Toggles a class on or off.</li>
+                <li><strong><code class="highlight-red">style.property</code>:</strong> Sets inline styles directly.</li>
+              </ul>
+
+              <!-- VISUALIZATION: Class State Toggle Diagram -->
+              <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; margin: 16px 0; display: flex; justify-content: center; align-items: center; gap: 12px; font-family: monospace; font-size: 0.8rem;">
+                <div style="border: 2px dashed #94a3b8; padding: 8px 12px; border-radius: 6px; text-align: center; background: #1e293b; color: #94a3b8;">.btn<br><span style="font-size:0.7rem;">(Default State)</span></div>
+                <div style="color: #38bdf8; font-weight: bold;">➔ .toggle('active') ➔</div>
+                <div style="border: 2px solid #f43f5e; padding: 8px 12px; border-radius: 6px; text-align: center; background: #f43f5e; color: #fff; box-shadow: 0 0 10px rgba(244, 63, 94, 0.4);">.btn.active<br><span style="font-size:0.7rem;">(Active State)</span></div>
+              </div>
+            </div>
+
+            <pre><code class="language-javascript">const button = document.querySelector('.btn');
+
+      // Toggle active class on click
+      button.addEventListener('click', () => {
+        button.classList.toggle('active');
+      });</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: Connecting HTML & CSS ==================== -->
+      <section>
+        <h2>Where does CSS go?</h2>
+        <p style="text-align: left; font-size: 0.9rem;">You have two main ways to tell your HTML about your CSS styles.</p>
+
+        <div class="grid-2col">
+          <div class="card">
+            <h3>1. The <code>&lt;style&gt;</code> Tag</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Written directly inside the HTML file's <code>&lt;head&gt;</code>. Good for very small, quick tests.</p>
+            <pre><code class="language-html">&lt;head&gt;
+  &lt;style&gt;
+    h1 { color: red; }
+  &lt;/style&gt;
+&lt;/head&gt;</code></pre>
+          </div>
+          <div class="card">
+            <h3>2. The <code>&lt;link&gt;</code> Tag (Best Practice)</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Links to a separate <code>.css</code> file. This is the industry standard because it keeps your code clean and organized.</p>
+            <pre><code class="language-html">&lt;head&gt;
+  &lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;/head&gt;</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: CSS Basics ==================== -->
+      <section>
+        <h2>CSS Basics: Colors &amp; Variables</h2>
+
+        <div class="grid-2col">
+          <div class="card">
+            <h3>Color vs. Background</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Don't mix these up!</p>
+            <ul>
+              <li><strong><code class="highlight-red">color</code>:</strong> Changes the color of the text itself.</li>
+              <li><strong><code class="highlight-red">background-color</code>:</strong> Changes the color of the box behind the text.</li>
+            </ul>
+            <pre><code class="language-css">.error-message {
+  color: white;
+  background-color: darkred;
+}</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>CSS Variables (Tokens)</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Store colors in one place so you don't have to memorize hex codes!</p>
+            <pre><code class="language-css">:root {
+  --my-red: #ff2a4b;
+}
+
+.button {
+  background-color: var(--my-red);
+}</code></pre>
+          </div>
+        </div>
+      </section>
+      
+      <!-- ==================== SLIDE 5: CSS Box Model (Margin) ==================== -->
+      <section>
+        <h2>CSS Box Model: Margin</h2>
+
+        <div class="grid-2col">
+          <div class="card">
+            <div>
+              <h3>Outside Spacing</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Margin creates space outside the element's border, pushing neighboring boxes away.</p>
+              <ul>
+                <li><strong>Individual sides:</strong> <code class="highlight-red">margin-top</code>, <code class="highlight-red">margin-right</code>, etc.</li>
+                <li><strong>Shorthand:</strong> <code class="highlight-red">margin: 20px;</code> (All sides equal).</li>
+                <li><strong>2-Value Shorthand:</strong> <code class="highlight-red">margin: 10px 20px;</code> (Top/Bottom, Left/Right).</li>
+              </ul>
+
+              <!-- VISUALIZATION: Margin Space Diagram -->
+              <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; margin: 16px 0; display: flex; justify-content: center;">
+                <div style="border: 2px dashed #f97316; background: rgba(249, 115, 22, 0.12); padding: 16px; width: 85%; text-align: center; border-radius: 6px;">
+                  <div style="color: #f97316; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin-bottom: 6px;">Margin Space (Pushes Away)</div>
+                  <div style="background: #334155; border: 2px solid #fff; padding: 8px; font-family: monospace; font-size: 0.85rem; color: #fff; border-radius: 4px;">Element Border &amp; Content</div>
+                </div>
+              </div>
+            </div>
+
+            <pre><code class="language-css">.card {
+        /* Push other elements away */
+        margin: 24px;
+      }</code></pre>
+          </div>
+
+          <div class="card">
+            <div>
+              <h3>Centering &amp; Margin Collapse</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Key margin tricks and behaviors every developer should know.</p>
+              <ul>
+                <li><strong>Horizontal Centering:</strong> <code class="highlight-red">margin: 0 auto;</code> centers block elements with a fixed width.</li>
+                <li><strong>Margin Collapse:</strong> Vertical margins of adjacent elements combine into a single margin.</li>
+              </ul>
+
+              <!-- VISUALIZATION: margin: 0 auto Centering Diagram -->
+              <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; margin: 16px 0; display: flex; flex-direction: column; gap: 8px;">
+                <div style="background: rgba(255,255,255,0.05); border-radius: 4px; padding: 6px; position: relative;">
+                  <div style="width: 60%; margin: 0 auto; background: #38bdf8; color: #0f172a; text-align: center; padding: 6px; font-weight: bold; font-family: monospace; font-size: 0.8rem; border-radius: 4px;">margin: 0 auto;</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #94a3b8; padding: 0 10%; font-family: monospace;">
+                  <span>◄ Auto Space ►</span>
+                  <span>◄ Auto Space ►</span>
+                </div>
+              </div>
+            </div>
+
+            <pre><code class="language-css">.container {
+        width: 800px;
+        /* Center horizontally */
+        margin-left: auto;
+        margin-right: auto;
+      }</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: CSS Box Model (Padding) ==================== -->
+      <section>
+        <h2>CSS Box Model: Padding</h2>
+
+        <div class="grid-2col">
+          <div class="card">
+            <div>
+              <h3>Inside Spacing</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Padding creates breathing room inside the element, between content and border.</p>
+              <ul>
+                <li><strong>Individual sides:</strong> <code class="highlight-red">padding-top</code>, <code class="highlight-red">padding-left</code>, etc.</li>
+                <li><strong>Background inclusion:</strong> Padding takes on the background color/image of the box.</li>
+                <li><strong>Shorthand:</strong> <code class="highlight-red">padding: 12px 24px;</code> (Vertical, Horizontal).</li>
+              </ul>
+
+              <!-- VISUALIZATION: Padding Inside Box Diagram -->
+              <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; margin: 16px 0; display: flex; justify-content: center;">
+                <div style="background: rgba(34, 197, 94, 0.15); border: 2px dashed #22c55e; padding: 18px; width: 85%; box-sizing: border-box; border-radius: 6px;">
+                  <div style="color: #22c55e; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; text-align: center; margin-bottom: 6px;">Padding (Space Inside Border)</div>
+                  <div style="background: #3b82f6; color: white; text-align: center; padding: 8px; font-family: monospace; font-size: 0.85rem; border-radius: 4px;">Content Area</div>
+                </div>
+              </div>
+            </div>
+
+            <pre><code class="language-css">.button {
+        background-color: var(--my-red);
+        color: white;
+        padding: 12px 24px;
+      }</code></pre>
+          </div>
+
+          <div class="card">
+            <div>
+              <h3>Box Sizing (<code class="highlight-red">box-sizing</code>)</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Prevent padding from growing your elements unexpectedly!</p>
+              <ul>
+                <li><strong><code class="highlight-red">content-box</code> (Default):</strong> Padding is added to width, making the element bigger.</li>
+                <li><strong><code class="highlight-red">border-box</code> (Recommended):</strong> Padding is included inside the specified width.</li>
+              </ul>
+
+              <!-- VISUALIZATION: Content-Box vs Border-Box Comparison -->
+              <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; margin: 16px 0; display: flex; justify-content: space-around; align-items: flex-end; font-family: monospace;">
+                <div style="background: rgba(59, 130, 246, 0.2); border: 2px solid #f43f5e; padding: 10px; text-align: center; font-size: 0.75rem; width: 130px;">
+                  <div style="color: #f43f5e; font-weight: bold; margin-bottom: 4px;">content-box</div>
+                  <div style="background: #3b82f6; color: #fff; padding: 4px; font-size: 0.7rem;">Width + Padding</div>
+                </div>
+                <div style="background: rgba(59, 130, 246, 0.2); border: 2px solid #38bdf8; padding: 10px; text-align: center; font-size: 0.75rem; width: 100px;">
+                  <div style="color: #38bdf8; font-weight: bold; margin-bottom: 4px;">border-box</div>
+                  <div style="background: #3b82f6; color: #fff; padding: 4px; font-size: 0.7rem;">Fixed Width</div>
+                </div>
+              </div>
+            </div>
+
+            <pre><code class="language-css">*, *::before, *::after {
+        /* Universal reset for predictable sizing */
+        box-sizing: border-box;
+      }</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: Naming Things in CSS ==================== -->
+      <section>
+        <h2>Naming Things: Tag, Class &amp; ID</h2>
+        <div class="analogy-box">
+          How do we tell CSS <em>exactly</em> which part of the HTML to paint red? We use <strong>Selectors</strong>. Think of an ID as a Passport Number (unique), a Class as a Uniform (groups of people), and a Tag as "Human" (everyone).
+        </div>
+
+        <div class="grid-3col">
+          <div class="card">
+            <h3>1. Tag Selector</h3>
+            <p style="font-size: 0.75rem; color: var(--text-muted);">Targets <strong>EVERY</strong> paragraph on the page.</p>
+            <pre><code class="language-css">p {
+  color: white;
+}</code></pre>
+            <p style="font-size: 0.75rem;">HTML: <code class="highlight-red">&lt;p&gt;</code></p>
+          </div>
+          <div class="card">
+            <h3>2. Class Selector (<code>.</code>)</h3>
+            <p style="font-size: 0.75rem; color: var(--text-muted);">Targets any element wearing the <strong>.btn</strong> uniform.</p>
+            <pre><code class="language-css">.btn {
+  background: red;
+}</code></pre>
+            <p style="font-size: 0.75rem;">HTML: <code class="highlight-red">&lt;button class="btn"&gt;</code></p>
+          </div>
+          <div class="card">
+            <h3>3. ID Selector (<code>#</code>)</h3>
+            <p style="font-size: 0.75rem; color: var(--text-muted);">Targets one <strong>UNIQUE</strong> element on the page.</p>
+            <pre><code class="language-css">#navbar {
+  height: 60px;
+}</code></pre>
+            <p style="font-size: 0.75rem;">HTML: <code class="highlight-red">&lt;nav id="navbar"&gt;</code></p>
+          </div>
+        </div>
+      </section>
+
+      
+
+      <!-- ==================== SLIDE 8: CSS Layouts (Flexbox) ==================== -->
+      <section>
+        <h2>CSS Layouts: Flexbox (The 1D Line)</h2>
+
+        <div class="grid-2col">
+          <div class="card">
+            <h3>Flex Basics &amp; Navbar</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Arrange items side-by-side effortlessly along a 1D line.</p>
+            <ul>
+              <li><strong><code class="highlight-red">display: flex;</code></strong> Enables the flexbox layout context.</li>
+              <li><strong><code class="highlight-red">justify-content</code>:</strong> Aligns items along the main axis.</li>
+              <li><strong><code class="highlight-red">align-items</code>:</strong> Aligns items along the cross axis.</li>
+            </ul>
+            <pre><code class="language-css">.navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Changing Axis (flex-direction)</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">The main axis direction dictates how layout properties behave!</p>
+            <ul>
+              <li><strong><code class="highlight-red">row</code> (default):</strong> Main axis = Horizontal, Cross axis = Vertical.</li>
+              <li><strong><code class="highlight-red">column</code>:</strong> Main axis = Vertical, Cross axis = Horizontal.</li>
+            </ul>
+            <pre><code class="language-css">.sidebar {
+        display: flex;
+        flex-direction: column; /* Flips Main Axis to vertical */
+        justify-content: space-between;
+      }</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: Flexbox - justify-content ==================== -->
+      <section>
+        <h2>Flexbox: Main Axis (<code class="highlight-red">justify-content</code>)</h2>
+        <div class="analogy-box">
+          <strong>justify-content</strong> controls how items are distributed along the <strong>main axis</strong> (horizontally by default in row layout).
+        </div>
+
+        <div class="grid-2col">
+          <div>
+            <ul>
+              <li><strong><code>flex-start</code></strong> (Default) Items align to the start.</li>
+              <li><strong><code>center</code></strong> Items group at the center.</li>
+              <li><strong><code>flex-end</code></strong> Items align to the end.</li>
+              <li><strong><code>space-between</code></strong> Equal space between items.</li>
+              <li><strong><code>space-around</code></strong> Equal space around each item.</li>
+              <li><strong><code>space-evenly</code></strong> Equal space between all items and edges.</li>
+            </ul>
+          </div>
+          <div class="card" style="display: flex; flex-direction: column; gap: 8px;">
+            <div>
+              <small style="color: #aaa;">center</small>
+              <div style="display: flex; justify-content: center; background: #333; padding: 6px; border-radius: 5px; gap: 4px;">
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">1</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">2</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">3</span>
+              </div>
+            </div>
+            <div>
+              <small style="color: #aaa;">space-between</small>
+              <div style="display: flex; justify-content: space-between; background: #333; padding: 6px; border-radius: 5px;">
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">1</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">2</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">3</span>
+              </div>
+            </div>
+            <div>
+              <small style="color: #aaa;">space-around</small>
+              <div style="display: flex; justify-content: space-around; background: #333; padding: 6px; border-radius: 5px;">
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">1</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">2</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">3</span>
+              </div>
+            </div>
+            <div>
+              <small style="color: #aaa;">space-evenly</small>
+              <div style="display: flex; justify-content: space-evenly; background: #333; padding: 6px; border-radius: 5px;">
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">1</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">2</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: Flexbox - align-items ==================== -->
+      <section>
+        <h2>Flexbox: Cross Axis (<code class="highlight-red">align-items</code>)</h2>
+        <div class="analogy-box">
+          <strong>align-items</strong> controls how items align along the <strong>cross axis</strong> (vertically by default in row layout).
+        </div>
+
+        <div class="grid-2col">
+          <div>
+            <ul>
+              <li><strong><code>stretch</code></strong> (Default) Items stretch to fill container height.</li>
+              <li><strong><code>flex-start</code></strong> Items align to the top.</li>
+              <li><strong><code>center</code></strong> Items center vertically.</li>
+              <li><strong><code>flex-end</code></strong> Items align to the bottom.</li>
+              <li><strong><code>baseline</code></strong> Items align along their text baseline.</li>
+            </ul>
+          </div>
+          <div class="card" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div>
+              <small style="color: #aaa;">flex-start</small>
+              <div style="display: flex; align-items: flex-start; height: 60px; background: #333; padding: 4px; border-radius: 5px; gap: 4px;">
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">Top</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 8px 8px; border-radius: 3px; font-size: 0.65rem; color: #fff;">Tall</span>
+              </div>
+            </div>
+            <div>
+              <small style="color: #aaa;">center</small>
+              <div style="display: flex; align-items: center; height: 60px; background: #333; padding: 4px; border-radius: 5px; gap: 4px;">
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">Mid</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 8px 8px; border-radius: 3px; font-size: 0.65rem; color: #fff;">Tall</span>
+              </div>
+            </div>
+            <div>
+              <small style="color: #aaa;">flex-end</small>
+              <div style="display: flex; align-items: flex-end; height: 60px; background: #333; padding: 4px; border-radius: 5px; gap: 4px;">
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff;">Bot</span>
+                <span style="background: var(--red-bright, #ff4757); padding: 8px 8px; border-radius: 3px; font-size: 0.65rem; color: #fff;">Tall</span>
+              </div>
+            </div>
+            <div>
+              <small style="color: #aaa;">stretch</small>
+              <div style="display: flex; align-items: stretch; height: 60px; background: #333; padding: 4px; border-radius: 5px; gap: 4px;">
+                <span style="background: var(--red-bright, #ff4757); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; color: #fff; display: flex; align-items: center;">Full</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: CSS Layouts (Grid) ==================== -->
+      <section>
+        <h2>CSS Layouts: Grid (The 2D Checkerboard)</h2>
+        <div class="analogy-box">
+          While Flexbox is great for a single row, <strong>CSS Grid</strong> is perfect for arranging things in rows AND columns at the same time. Think of a photo gallery or a set of project cards.
+        </div>
+
+        <div class="grid-2col">
+          <div class="card">
+            <pre><code class="language-css">.project-gallery {
+  display: grid;
+  /* Make columns automatically fit! */
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(200px, 1fr)
+  );
+  gap: 1rem; /* Space between cards */
+}</code></pre>
+          </div>
+          <div>
+            <p style="font-size: 0.9rem; text-align: left;">
+              The <code class="highlight-red">auto-fit</code> magic trick means you don't even need to write separate code for mobile phones. The browser will automatically wrap the cards when the screen gets too small!
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: CSS Motion ==================== -->
+      <section>
+        <h2>Bringing it to Life: Hover &amp; Transforms</h2>
+        <p style="text-align: left; font-size: 0.9rem;">We can make elements react when a user points their mouse at them using the <code class="highlight-red">:hover</code> state and <code class="highlight-red">transform</code> property.</p>
+
+        <div class="grid-2col">
+          <div class="card">
+            <h3>The Code</h3>
+            <pre><code class="language-css">.card {
+  transition: transform 0.3s ease;
+}
+
+/* When the mouse hovers over it... */
+.card:hover {
+  transform: translateY(-10px) scale(1.05);
+}</code></pre>
+          </div>
+          <div class="card">
+            <h3>What it does</h3>
+            <ul>
+              <li><strong><code class="highlight-red">transition</code>:</strong> Makes the movement smooth (takes 0.3 seconds) instead of snapping instantly.</li>
+              <li><strong><code class="highlight-red">translateY(-10px)</code>:</strong> Moves the card UP by 10 pixels.</li>
+              <li><strong><code class="highlight-red">scale(1.05)</code>:</strong> Makes the card 5% bigger.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: Media Queries ==================== -->
+      <section>
+        <h2>Mobile-Friendly: Media Queries</h2>
+        <div class="analogy-box">
+          A layout that looks great on a laptop might look terrible on a phone. <strong>Media Queries</strong> act like an "If statement" for your CSS based on screen size.
+        </div>
+
+        <div class="grid-2col">
+          <div class="card">
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">"If the screen is smaller than 600px wide, change the navbar from a row into a stacked column."</p>
+            <pre><code class="language-css">/* Desktop Default */
+.navbar {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Mobile Rule */
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+  }
+}</code></pre>
+          </div>
+          <div>
+            <ul style="margin-top: 1rem;">
+              <li>Always build your HTML for phones first, then add complexity for larger screens.</li>
+              <li>Use the browser's <strong>Inspect Element / Developer Tools</strong> to simulate a phone screen while you code!</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: Markdown (README) ==================== -->
+      <section>
+        <h2>Documentation: Writing in Markdown (.md)</h2>
+        <p style="text-align: left; font-size: 0.9rem;">Every developer project needs a <code>README.md</code> file. Markdown is a super-simple way to write formatted text using just symbols.</p>
+
+        <div class="grid-2col">
+          <div class="card">
+            <h3>What you type (Raw MD)</h3>
+            <pre><code class="language-markdown"># My Project Name
+This is a **bold** statement!
+
+### Features
+- Responsive Design
+- Custom animations
+
+[Visit Google](https://google.com)</code></pre>
+          </div>
+          <div class="card" style="background: white; color: black;">
+            <h3 style="color: black; border-bottom: 1px solid #ccc; padding-bottom: 5px;">My Project Name</h3>
+            <p style="font-size: 0.8rem; margin: 5px 0;">This is a <strong>bold</strong> statement!</p>
+            <h4 style="color: black; margin: 10px 0 5px 0;">Features</h4>
+            <ul style="font-size: 0.8rem; margin-top: 0; padding-left: 20px;">
+              <li style="color: black;">Responsive Design</li>
+              <li style="color: black;">Custom animations</li>
+            </ul>
+            <a href="#" style="font-size: 0.8rem; color: blue;">Visit Google</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: Assignment Briefing ==================== -->
+      <section style="text-align: left;">
+        <span class="badge">Week 1 Deliverable</span>
+        <h2>Your First Portfolio Project</h2>
+        <div class="card">
+          <h3 style="margin-bottom: 0.5rem;">Build a Multi-Section Static Web Page</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Apply everything we learned today to build the foundation of your personal portfolio page. We will continue adding to this in Weeks 2 &amp; 3!</p>
+
+          <ul>
+            <li><strong>The Structure (HTML):</strong> Must include a <code class="highlight-red">&lt;header&gt;</code>, at least 3 content <code class="highlight-red">&lt;section&gt;</code> blocks (e.g., About, Skills, Contact), and a <code class="highlight-red">&lt;footer&gt;</code>.</li>
+            <li><strong>The Look (CSS):</strong> Setup custom color variables. Use Flexbox for your navbar and Grid for your skills/projects.</li>
+            <li><strong>The Motion (CSS):</strong> Add a hover effect to your buttons or cards using <code class="highlight-red">transform</code>.</li>
+            <li><strong>The Docs (Markdown):</strong> Write a clear <code class="highlight-red">README.md</code> explaining what your project is and how you built it.</li>
+            <li><strong>AI Usage:</strong> While AI can be helpful, the goal of this UpSkill is to strengthen your understanding. Use it only as a learning tool rather than a replacement for your own work.</li>
+          </ul>
+        </div>
+        <p style="font-size: 0.95rem; color: var(--red-bright); font-weight: bold; margin-top: 1rem; text-align: center;">
+          Deadline: Saturday, September 19, 2026
+        </p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js & Highlight.js Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+  <script>
+    // Initialize Reveal.js Engine
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      center: true,
+      hash: true,
+      transition: 'slide',
+      backgroundTransition: 'fade'
+    });
+
+    // Initialize Highlight.js for code syntax formatting
+    hljs.highlightAll();
+  </script>
+</body>
+</html>
