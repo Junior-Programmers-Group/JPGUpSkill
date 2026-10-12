@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From Vanilla JavaScript to React + TypeScript</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/xml.min.js"></script>
+  <style>
+    :root {
+      --bg: #080b14;
+      --panel: #101727;
+      --panel2: #151f33;
+      --ink: #eef4ff;
+      --muted: #9aabc7;
+      --cyan: #64e7ff;
+      --blue: #7c8cff;
+      --pink: #ff70c7;
+      --green: #75f0b5;
+      --yellow: #ffd479;
+      --line: rgba(161, 190, 255, .18);
+      --shadow: 0 24px 80px rgba(0, 0, 0, .36);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      overflow: hidden
+    }
+
+    body:before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 12% 8%, rgba(68, 119, 255, .15), transparent 38%), radial-gradient(ellipse at 90% 80%, rgba(255, 75, 194, .10), transparent 34%), linear-gradient(rgba(255, 255, 255, .018) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .018) 1px, transparent 1px);
+      background-size: auto, auto, 44px 44px, 44px 44px;
+      mask-image: linear-gradient(to bottom, black, transparent 95%)
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    a {
+      color: var(--cyan)
+    }
+
+    .deck {
+      height: 100%;
+      position: relative
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      overflow: auto;
+      padding: clamp(26px, 5vw, 76px) clamp(22px, 7vw, 112px) 110px;
+      animation: enter .32s ease both
+    }
+
+    .slide.active {
+      display: block
+    }
+
+    @keyframes enter {
+      from {
+        opacity: 0;
+        transform: translateY(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .kicker {
+      font-size: .75rem;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 800;
+      margin-bottom: 18px
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6.5vw, 6rem);
+      line-height: .99;
+      letter-spacing: -.06em;
+      max-width: 1050px;
+      margin-bottom: 26px
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3.7rem);
+      line-height: 1.04;
+      letter-spacing: -.045em;
+      margin-bottom: 20px
+    }
+
+    h3 {
+      font-size: 1.13rem;
+      margin-bottom: 10px
+    }
+
+    p,
+    li {
+      font-size: clamp(1rem, 1.35vw, 1.22rem);
+      line-height: 1.55;
+      color: #d6e0f4
+    }
+
+    .lead {
+      font-size: clamp(1.15rem, 2vw, 1.6rem);
+      max-width: 850px;
+      color: #bdcce6
+    }
+
+    .gradient {
+      background: linear-gradient(100deg, var(--cyan), #b7b8ff 48%, var(--pink));
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .04);
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #cbd7ef;
+      font-size: .86rem;
+      margin: 4px 6px 4px 0
+    }
+
+    .pill .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px currentColor
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr))
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 22px;
+      background: linear-gradient(145deg, rgba(21, 31, 51, .92), rgba(12, 17, 29, .92));
+      box-shadow: var(--shadow)
+    }
+
+    .card p:last-child {
+      margin-bottom: 0
+    }
+
+    .card .icon {
+      font-size: 1.7rem;
+      margin-bottom: 14px
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .small {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.5
+    }
+
+    .big-num {
+      font-size: 3rem;
+      letter-spacing: -.06em;
+      font-weight: 850;
+      color: var(--cyan)
+    }
+
+    .callout {
+      border-left: 3px solid var(--cyan);
+      background: rgba(100, 231, 255, .07);
+      padding: 15px 18px;
+      border-radius: 0 12px 12px 0;
+      margin: 20px 0;
+      color: #dbefff;
+      font-size: 1.03rem;
+      line-height: 1.5
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px
+    }
+
+    .flowbox {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .04);
+      padding: 18px;
+      border-radius: 14px;
+      text-align: center
+    }
+
+    .arrow {
+      text-align: center;
+      color: var(--cyan);
+      font-size: 1.5rem;
+      line-height: 1.1
+    }
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: #070b13;
+      border: 1px solid rgba(128, 160, 230, .2);
+      border-radius: 14px;
+      padding: 18px;
+      color: #dbe8ff;
+      font-size: clamp(.77rem, 1vw, .95rem);
+      line-height: 1.55;
+      overflow: auto;
+      max-height: 55vh
+    }
+
+    pre code.hljs {
+      padding: 0;
+      background: transparent
+    }
+
+    .hljs {
+      color: #dbe8ff;
+      background: transparent
+    }
+
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal {
+      color: #c7a6ff
+    }
+
+    .hljs-title,
+    .hljs-title.function_,
+    .hljs-function .hljs-title {
+      color: #78d9ff
+    }
+
+    .hljs-string,
+    .hljs-attr {
+      color: #a8f0c6
+    }
+
+    .hljs-comment {
+      color: #7184a6;
+      font-style: italic
+    }
+
+    .hljs-type,
+    .hljs-built_in,
+    .hljs-number {
+      color: #ffb5e8
+    }
+
+    .hljs-params,
+    .hljs-property {
+      color: #ffd479
+    }
+
+    .hljs-tag,
+    .hljs-name {
+      color: #64e7ff
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace
+    }
+
+    .kw {
+      color: #c7a6ff
+    }
+
+    .fn {
+      color: #78d9ff
+    }
+
+    .str {
+      color: #a8f0c6
+    }
+
+    .comment {
+      color: #7184a6
+    }
+
+    .type {
+      color: #ffb5e8
+    }
+
+    .label {
+      font-size: .75rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--muted);
+      margin-bottom: 10px
+    }
+
+    .demo {
+      border: 1px solid rgba(100, 231, 255, .26);
+      background: linear-gradient(145deg, rgba(22, 43, 62, .78), rgba(16, 23, 39, .92));
+      padding: 22px;
+      border-radius: 20px
+    }
+
+    .demo h3 {
+      margin-top: 0
+    }
+
+    .demo button,
+    .btn {
+      border: 1px solid rgba(100, 231, 255, .36);
+      background: linear-gradient(135deg, rgba(100, 231, 255, .16), rgba(124, 140, 255, .17));
+      color: var(--ink);
+      border-radius: 11px;
+      padding: 10px 15px;
+      font-weight: 700;
+      transition: .18s
+    }
+
+    .demo button:hover,
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--cyan);
+      box-shadow: 0 8px 24px rgba(100, 231, 255, .12)
+    }
+
+    .btn.primary {
+      background: linear-gradient(100deg, #4bc9e7, #8a8cff);
+      color: #07101a;
+      border: 0
+    }
+
+    .btn.ghost {
+      background: transparent
+    }
+
+    input[type=text],
+    input[type=number],
+    textarea {
+      background: #080d18;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px 12px;
+      width: 100%;
+      outline: none
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(100, 231, 255, .1)
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .row>* {
+      min-width: 0
+    }
+
+    .stat {
+      font-size: 4rem;
+      font-weight: 850;
+      letter-spacing: -.07em;
+      color: var(--cyan);
+      line-height: 1.1
+    }
+
+    .task-list {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, .045);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px
+    }
+
+    .task span {
+      flex: 1
+    }
+
+    .task.done span {
+      text-decoration: line-through;
+      color: var(--muted)
+    }
+
+    .task .remove {
+      padding: 5px 9px;
+      border-color: rgba(255, 112, 199, .3);
+      color: #ffaddd
+    }
+
+    .quiz-option {
+      display: block;
+      text-align: left;
+      width: 100%;
+      margin: 9px 0;
+      padding: 13px 15px !important
+    }
+
+    .quiz-option.correct {
+      border-color: var(--green);
+      background: rgba(117, 240, 181, .13)
+    }
+
+    .quiz-option.wrong {
+      border-color: var(--pink);
+      background: rgba(255, 112, 199, .12)
+    }
+
+    .feedback {
+      min-height: 28px;
+      margin-top: 12px;
+      font-weight: 700
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0
+    }
+
+    .checklist li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .checklist li:before {
+      content: "✓";
+      color: var(--green);
+      font-weight: 900;
+      margin-right: 12px
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px clamp(16px, 3vw, 42px);
+      background: linear-gradient(180deg, transparent, rgba(8, 11, 20, .94) 24%);
+      backdrop-filter: blur(12px)
+    }
+
+    .progress {
+      height: 3px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, .08)
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--pink));
+      transition: width .25s
+    }
+
+    .footer .brand {
+      font-size: .78rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap
+    }
+
+    .footer .spacer {
+      flex: 1
+    }
+
+    .counter {
+      font-variant-numeric: tabular-nums;
+      color: #c6d2e8;
+      font-size: .9rem;
+      min-width: 58px;
+      text-align: center
+    }
+
+    .navbtn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .05);
+      border-radius: 12px;
+      color: var(--ink);
+      font-size: 1.1rem
+    }
+
+    .navbtn:disabled {
+      opacity: .3;
+      cursor: default
+    }
+
+    .toc {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 7, 13, .86);
+      backdrop-filter: blur(14px);
+      z-index: 30;
+      display: none;
+      padding: 6vh 7vw;
+      overflow: auto
+    }
+
+    .toc.open {
+      display: block
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px
+    }
+
+    .toc button {
+      color: var(--ink);
+      text-align: left;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel)
+    }
+
+    .toc button span {
+      display: block;
+      color: var(--cyan);
+      font-size: .72rem;
+      margin-bottom: 6px
+    }
+
+    kbd {
+      border: 1px solid #53617c;
+      border-radius: 5px;
+      padding: 2px 6px;
+      color: #c8d6ee;
+      font-size: .82em
+    }
+
+    @media(max-width:760px) {
+      .slide {
+        padding: 28px 20px 105px
+      }
+
+      .grid,
+      .grid.three,
+      .two-col {
+        grid-template-columns: 1fr
+      }
+
+      .toc-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .card {
+        padding: 17px
+      }
+
+      pre {
+        max-height: none
+      }
+
+      .footer .brand {
+        display: none
+      }
+
+      .stat {
+        font-size: 3rem
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      * {
+        animation: none !important;
+        transition: none !important
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="deck" id="deck">
+    <section class="slide active">
+      <div class="kicker">Week 05 · Frontend Track · October 12, 2026</div>
+      <h1>From Vanilla JS<br>to <span class="gradient">React + TypeScript</span></h1>
+      <p class="lead">Build interfaces as reusable pieces. Make them interactive with state. Make data clearer with
+        types.</p>
+      <div style="margin-top:28px">
+        <span class="pill"><span class="dot"></span> React fundamentals</span>
+        <span class="pill">JSX · Props · State</span>
+        <span class="pill">Live demos included</span>
+      </div>
+      <div class="callout" style="margin-top:38px;max-width:760px"><strong>Opening question:</strong> We already know
+        HTML, CSS, and JavaScript. Why do we need React?</div>
+      <p class="small">Speaker: Ethan Van Gamat · Use ← → to navigate · Press <kbd>O</kbd> for slide overview</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">01 · The learning path</div>
+      <h2>React is the next layer—not a replacement.</h2>
+      <p class="lead">Every previous week gives us a tool we will use again today.</p>
+      <div class="grid three">
+        <div class="card">
+          <div class="icon">▤</div>
+          <h3>Week 1 · HTML/CSS</h3>
+          <p>Semantic structure, layout, responsive design, documentation.</p><span class="pill">Structure +
+            style</span>
+        </div>
+        <div class="card">
+          <div class="icon">⚡</div>
+          <h3>Week 2 · JavaScript</h3>
+          <p>Variables, functions, conditions, arrays, DOM events.</p><span class="pill">Logic + behavior</span>
+        </div>
+        <div class="card">
+          <div class="icon">⇄</div>
+          <h3>Week 3 · PHP</h3>
+          <p>Forms, server-side processing, and database connectivity.</p><span class="pill">Backend + data</span>
+        </div>
+      </div>
+      <div class="callout">React helps organize the frontend. CSS still styles it, JavaScript still powers its logic,
+        and PHP/Laravel can still serve as the backend.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">02 · The problem</div>
+      <h2>When UI updates become manual work</h2>
+      <div class="two-col">
+        <div>
+          <div class="label">Vanilla JavaScript · familiar from Week 2</div>
+          <pre><code>let count = 0;
+
+button.addEventListener("click", () => {
+  count++;
+  output.textContent = String(count);
+});</code></pre>
+          <p>We store the value, find the right element, then update the DOM ourselves.</p>
+        </div>
+        <div>
+          <div class="label">What gets harder at scale?</div>
+          <div class="card">
+            <h3>More moving parts</h3>
+            <p>Many UI elements may depend on the same data.</p>
+          </div>
+          <div class="card" style="margin-top:12px">
+            <h3>More coordination</h3>
+            <p>Manual DOM updates can become spread across many handlers.</p>
+          </div>
+          <div class="card" style="margin-top:12px">
+            <h3>More chances to drift</h3>
+            <p>The displayed interface can get out of sync with the app's data.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout">Direct DOM manipulation is still useful. React is valuable when we want a consistent,
+        component-based way to describe a changing UI.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Week 2 → Week 5 · Bridge example</div>
+      <h2>You already built the behavior. React changes the workflow.</h2>
+      <p class="lead">Your Week 2 sample recreates a tiny piece of React: state values, setter functions, and a full UI
+        refresh.</p>
+      <div class="two-col">
+        <div>
+          <div class="label">Week 2 · Vanilla JavaScript + DOM</div>
+          <pre><code class="language-javascript">let hooks = [];
+let hookIndex = 0;
+
+const useState = (initialValue) => {
+  const index = hookIndex;
+  if (hooks[index] === undefined) {
+    hooks[index] = initialValue;
+  }
+
+  const setState = (next) => {
+    const value = typeof next === "function"
+      ? next(hooks[index])
+      : next;
+
+    if (hooks[index] !== value) {
+      hooks[index] = value;
+      refreshUI();
+    }
+  };
+
+  hookIndex++;
+  return [hooks[index], setState];
+};</code></pre>
+          <p class="small" style="margin-top:10px">Your mini implementation stores hook values by call order, then
+            clears and rebuilds the DOM when state changes.</p>
+        </div>
+        <div>
+          <div class="label">React · JSX + built-in hook</div>
+          <pre><code class="language-tsx">import { useState } from "react";
+
+function App() {
+  const [nPress, setNPress] = useState(0);
+  const [title, setTitle] = useState("Hello World");
+
+  return (
+    &lt;main className="container"&gt;
+      &lt;h3&gt;{title}&lt;/h3&gt;
+      &lt;p&gt;Button pressed {nPress} times&lt;/p&gt;
+
+      &lt;button onClick={() =&gt;
+        setNPress(prev =&gt; prev + 1)
+      }&gt;
+        Press me
+      &lt;/button&gt;
+
+      &lt;button onClick={() =&gt;
+        setTitle("Another Title")
+      }&gt;
+        Change title
+      &lt;/button&gt;
+    &lt;/main&gt;
+  );
+}</code></pre>
+          <p class="small" style="margin-top:10px">React manages hook state, rendering, and DOM updates. You describe
+            the UI instead of manually creating each element.</p>
+        </div>
+      </div>
+      <div class="callout"><strong>Teaching point:</strong> This is an educational miniature—not a replacement for
+        React. A real implementation needs more than a global array and a full DOM rebuild. React also has rules for
+        hook order, component identity, rendering, and scheduling.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Week 2 → Week 5 · Live comparison</div>
+      <h2>Same features, different amount of manual work.</h2>
+      <div class="two-col">
+        <div class="demo">
+          <div class="label">Try the Week 2 behavior</div>
+          <h3 id="week2Title" style="font-size:1.65rem">Hello World</h3>
+          <p id="week2Presses">Button pressed 0 times</p>
+          <div class="row" style="margin:12px 0">
+            <button id="week2Press" class="primary">Press me</button>
+          </div>
+          <div class="row">
+            <button class="week2TitleBtn" data-title="Change Title">Change Title</button>
+            <button class="week2TitleBtn" data-title="Another Title">Another Title</button>
+            <button class="week2TitleBtn" data-title="Hello World">Hello World</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>What your code teaches</h3>
+          <ul>
+            <li><code>hooks[]</code> stores state values.</li>
+            <li><code>hookIndex</code> identifies each hook call by its order during a render.</li>
+            <li><code>setNPress(prev =&gt; prev + 1)</code> updates from the previous value.</li>
+            <li><code>refreshUI()</code> removes and rebuilds the DOM.</li>
+          </ul>
+          <p class="small">In React, use the real <code>useState</code> hook. Don't implement your own hook system in
+            application code.</p>
+        </div>
+      </div>
+      <div class="callout">Ask the class: “Which lines in the React version replace <code>document.createElement</code>,
+        <code>appendChild</code>, and <code>removeElements</code>?” Look for the JSX return and React's render cycle.
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Code reading · Important caveat</div>
+      <h2>What the mini <code>useState</code> gets right—and what it skips.</h2>
+      <div class="grid">
+        <div class="card">
+          <h3 style="color:var(--green)">Good learning model</h3>
+          <ul>
+            <li>State survives a refresh.</li>
+            <li>Setter can accept a value or updater function.</li>
+            <li>Updating state triggers a rerender.</li>
+            <li>Hook calls rely on a stable call order.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--pink)">Not production React</h3>
+          <ul>
+            <li>One global hook array cannot isolate multiple components.</li>
+            <li>It rebuilds all DOM nodes on every update.</li>
+            <li>It doesn't handle component identity, effects, batching, or scheduling.</li>
+            <li>It doesn't enforce the Rules of Hooks.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">Use this sample to explain the idea behind state and rerendering—not to suggest that React
+        itself is implemented with only these few lines.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">03 · React mental model</div>
+      <h2>Describe the UI for the current state.</h2>
+      <div class="two-col">
+        <div class="stack">
+          <div class="flowbox"><strong>State / props</strong>
+            <p class="small">What data do we have?</p>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="flowbox"><strong>React component</strong>
+            <p class="small">Describe what should appear</p>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="flowbox"><strong>Rendered interface</strong>
+            <p class="small">The user sees the current UI</p>
+          </div>
+          <div class="arrow">↺ <span class="small">State changes → React updates the UI</span></div>
+        </div>
+        <div class="card">
+          <h3>React is…</h3>
+          <ul>
+            <li>A JavaScript library for user interfaces.</li>
+            <li>A way to compose interfaces from reusable components.</li>
+            <li>Often paired with TypeScript for stronger static checks.</li>
+          </ul>
+          <h3>React is not…</h3>
+          <p>A database, a backend, or a complete solution to every application concern.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">04 · Setup</div>
+      <h2>Start a React + TypeScript project</h2>
+      <p class="lead">Vite gives us a development server and build tooling; React builds the UI; TypeScript checks
+        types.</p>
+      <pre><code class="language-bash">npm create vite@latest my-react-app -- --template react-ts
+cd my-react-app
+npm install
+npm run dev</code></pre>
+      <div class="grid">
+        <div class="card">
+          <h3><code>src/App.tsx</code></h3>
+          <p>The main application component in the starter template.</p>
+        </div>
+        <div class="card">
+          <h3><code>src/main.tsx</code></h3>
+          <p>Mounts the React application into the page.</p>
+        </div>
+        <div class="card">
+          <h3><code>package.json</code></h3>
+          <p>Project scripts and dependencies.</p>
+        </div>
+        <div class="card">
+          <h3><code>tsconfig.json</code></h3>
+          <p>TypeScript compiler configuration.</p>
+        </div>
+      </div>
+      <p class="small">Requires Node.js and npm. The exact starter files can vary by template/version.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">05 · Components</div>
+      <h2>Make your own reusable building blocks.</h2>
+      <div class="two-col">
+        <div>
+          <pre><code class="language-tsx">function Welcome() {
+  return &lt;h1&gt;Welcome, Developer!&lt;/h1&gt;;
+}
+
+export default function App() {
+  return (
+    &lt;main&gt;
+      &lt;Welcome /&gt;
+      &lt;Welcome /&gt;
+    &lt;/main&gt;
+  );
+}</code></pre>
+        </div>
+        <div class="demo">
+          <div class="label">Rendered result</div>
+          <h2 style="font-size:1.7rem;margin:0 0 10px">Welcome, Developer!</h2>
+          <h2 style="font-size:1.7rem;margin:0">Welcome, Developer!</h2>
+          <p class="small" style="margin-top:18px">One component definition, reused twice.</p>
+        </div>
+      </div>
+      <div class="callout">Components are usually functions whose names start with a capital letter. They can represent
+        a button, card, navigation bar, form, or full page.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">06 · JSX / TSX</div>
+      <h2>HTML-like syntax, with JavaScript expressions.</h2>
+      <div class="two-col">
+        <div>
+          <pre><code class="language-tsx">const name = "Ethan";
+
+function App() {
+  return (
+    &lt;section&gt;
+      &lt;h1&gt;Hello, {name}!&lt;/h1&gt;
+      &lt;p&gt;Welcome to React.&lt;/p&gt;
+    &lt;/section&gt;
+  );
+}</code></pre>
+        </div>
+        <div class="card">
+          <h3>Remember these rules</h3>
+          <ul>
+            <li>JSX describes the interface inside JavaScript.</li>
+            <li>Curly braces insert JavaScript expressions.</li>
+            <li>Use <code>className</code>, not <code>class</code>.</li>
+            <li>Return one parent element or a fragment.</li>
+            <li>TSX is JSX with TypeScript type-checking support.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">Connect to Week 1: the markup and CSS concepts are familiar. React changes how the UI is
+        assembled and updated.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">07 · Props</div>
+      <h2>Props are inputs to a component.</h2>
+      <div class="two-col">
+        <div>
+          <pre><code class="language-tsx">interface GreetingProps {
+  name: string;
+}
+
+function Greeting({ name }: GreetingProps) {
+  return &lt;h2&gt;Hello, {name}!&lt;/h2&gt;;
+}
+
+// Use the same component with different data:
+&lt;Greeting name="Ethan" /&gt;
+&lt;Greeting name="Derick" /&gt;</code></pre>
+        </div>
+        <div class="demo">
+          <h3>Try changing the prop</h3><label class="small" for="greetName">name prop</label><input id="greetName"
+            type="text" value="Ethan" style="margin:8px 0 15px">
+          <div id="greetPreview" style="font-size:1.6rem;font-weight:800">Hello, Ethan!</div>
+          <p class="small">Conceptually: <code>&lt;Greeting name="..." /&gt;</code></p>
+        </div>
+      </div>
+      <div class="callout">Props are read-only from the receiving component's perspective. They configure a component;
+        they are not its private changing state.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">08 · TypeScript</div>
+      <h2>Catch type mistakes before runtime.</h2>
+      <div class="two-col">
+        <div>
+          <pre><code class="language-typescript">function add(a: number, b: number): number {
+  return a + b;
+}
+
+add(2, 3);      // Valid
+add("2", 3);    // Type error</code></pre>
+          <p class="small">TypeScript checks the code during development/build; it does not automatically validate
+            external data at runtime.</p>
+        </div>
+        <div class="card">
+          <h3>Useful starter types</h3>
+          <p><code>string</code> · text</p>
+          <p><code>number</code> · numeric values</p>
+          <p><code>boolean</code> · true / false</p>
+          <p><code>Task[]</code> · array of Task objects</p>
+          <p><code>"open" | "done"</code> · a limited set of allowed values</p>
+        </div>
+      </div>
+      <div class="callout">TypeScript is not a different runtime from JavaScript. It adds static analysis and its types
+        are erased when the code is emitted as JavaScript.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">09 · Typed components</div>
+      <h2>Make component contracts clear.</h2>
+      <pre><code class="language-tsx">interface UserCardProps {
+  name: string;
+  yearLevel: number;
+  isActive: boolean;
+}
+
+function UserCard({ name, yearLevel, isActive }: UserCardProps) {
+  return (
+    &lt;article className="user-card"&gt;
+      &lt;h2&gt;{name}&lt;/h2&gt;
+      &lt;p&gt;Year level: {yearLevel}&lt;/p&gt;
+      &lt;p&gt;{isActive ? "Active" : "Inactive"}&lt;/p&gt;
+    &lt;/article&gt;
+  );
+}</code></pre>
+      <div class="grid">
+        <div class="card">
+          <h3>Required props</h3>
+          <p>TypeScript can flag a missing <code>name</code> or an incorrect type.</p>
+        </div>
+        <div class="card">
+          <h3>Optional props</h3>
+          <p>Use <code>subtitle?: string</code> when a value may be omitted.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">10 · CSS still matters</div>
+      <h2>React changes composition—not CSS itself.</h2>
+      <div class="two-col">
+        <div>
+          <pre><code class="language-tsx">function ProfileCard() {
+  return (
+    &lt;article className="profile-card"&gt;
+      &lt;h2&gt;Junior Developer&lt;/h2&gt;
+      &lt;p&gt;Learning React + TypeScript&lt;/p&gt;
+    &lt;/article&gt;
+  );
+}</code></pre>
+          <pre style="margin-top:12px"><code>.profile-card {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: .75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}</code></pre>
+        </div>
+        <div class="card">
+          <h3>Reuse Week 1 skills</h3>
+          <ul>
+            <li>Semantic HTML concepts</li>
+            <li>Box model, spacing, typography</li>
+            <li>Flexbox and Grid</li>
+            <li>Responsive media queries</li>
+            <li>Accessible labels and focus styles</li>
+          </ul>
+          <p class="small">CSS files, CSS Modules, and other styling strategies can all be used with React.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">11 · Props vs state</div>
+      <h2>Two different jobs.</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="icon">📦</div>
+          <h3>Props</h3>
+          <p>Data passed into a component.</p>
+          <p class="muted">Example: a profile card receives a person's name.</p><span class="pill">Input</span>
+        </div>
+        <div class="card">
+          <div class="icon">🔄</div>
+          <h3>State</h3>
+          <p>Data that can change over time and affect what is rendered.</p>
+          <p class="muted">Example: whether a menu is open.</p><span class="pill">Changing data</span>
+        </div>
+      </div>
+      <div class="callout">A component should not mutate its props. State updates should use React's setter function,
+        not direct mutation.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">12 · useState</div>
+      <h2>Let the interface respond to state.</h2>
+      <div class="two-col">
+        <div>
+          <pre><code class="language-tsx">const [count, setCount] = useState&lt;number&gt;(0);
+
+&lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+  Increment
+&lt;/button&gt;</code></pre>
+          <p>React renders the count from state. The state setter requests an update.</p>
+          <div class="callout">A regular variable changing does not, by itself, tell React to render again.</div>
+        </div>
+        <div class="demo" style="text-align:center">
+          <div class="label">Live counter · click it</div>
+          <div class="stat" id="counterValue">0</div>
+          <div class="row" style="justify-content:center;margin:16px 0"><button id="counterMinus">−
+              Decrease</button><button class="primary" id="counterPlus">+ Increment</button></div><button class="ghost"
+            id="counterReset">Reset</button>
+          <p class="small" style="margin-top:15px">This demo simulates the same interaction; the source example uses
+            React's <code>useState</code>.</p>
+        </div>
+      </div>
+      <p class="small">Hooks such as <code>useState</code> must be called at the top level of a React component or
+        custom hook.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">13 · Events + forms</div>
+      <h2>React events feel familiar—but the UI is state-driven.</h2>
+      <div class="two-col">
+        <div class="card">
+          <h3>Vanilla JavaScript</h3>
+          <pre><code class="language-javascript">button.addEventListener(
+  "click",
+  handleClick
+);</code></pre>
+          <p>Find an element, then attach a listener.</p>
+        </div>
+        <div class="card">
+          <h3>React</h3>
+          <pre><code>&lt;button onClick={handleClick}&gt;
+  Click me
+&lt;/button&gt;</code></pre>
+          <p>Pass a function as an event prop.</p>
+        </div>
+      </div>
+      <div class="demo" style="margin-top:18px">
+        <h3>Controlled input demo</h3>
+        <p class="small">Type a name. The preview updates as the input changes.</p><input id="nameInput" type="text"
+          placeholder="Enter your name" value="Junior Developer">
+        <p style="font-size:1.35rem;margin:15px 0 0">Hello, <strong id="namePreview">Junior Developer</strong>!</p>
+      </div>
+      <div class="callout">Connect to Week 3: React can manage the form experience, while the backend still validates
+        and processes submitted data.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">14 · Lists + conditions</div>
+      <h2>Render UI from data.</h2>
+      <div class="two-col">
+        <div>
+          <pre><code class="language-tsx">tasks.map((task) =&gt; (
+  &lt;li key={task.id}&gt;
+    {task.completed ? "✓" : "○"}
+    {task.title}
+  &lt;/li&gt;
+))</code></pre>
+          <p>JavaScript's <code>map()</code> renders one UI item per data item. Conditional expressions choose what to
+            show.</p>
+        </div>
+        <div class="card">
+          <h3>Why the <code>key</code>?</h3>
+          <p>React uses stable keys to match list items across updates.</p>
+          <p class="muted">Prefer a stable ID when available. Array indexes can be problematic if items are reordered,
+            inserted, or deleted.</p>
+        </div>
+      </div>
+      <div class="callout">Think of the UI as a projection of your data: change the data correctly, and React can update
+        the visible list.</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">15 · Guided workshop</div>
+      <h2>Build a task tracker.</h2>
+      <p class="lead">A small app that combines HTML/CSS, JavaScript logic, TypeScript types, events, and state.</p>
+      <div class="grid three">
+        <div class="card">
+          <h3>1 · Add</h3>
+          <p>Use a form and controlled input to create a task.</p>
+        </div>
+        <div class="card">
+          <h3>2 · Complete</h3>
+          <p>Toggle completion and update the task summary.</p>
+        </div>
+        <div class="card">
+          <h3>3 · Remove</h3>
+          <p>Delete a task and handle the empty state.</p>
+        </div>
+      </div>
+      <div class="callout">Suggested component tree: <code>App → TaskForm + TaskList → TaskItem + TaskSummary</code>
+      </div>
+      <p class="small">In a live session, build one feature at a time, run it, and test an edge case before moving on.
+      </p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">16 · Interactive lab</div>
+      <h2>Your turn: task tracker playground</h2>
+      <div class="two-col">
+        <div class="demo">
+          <h3>Tasks</h3>
+          <form id="taskForm" class="row"><input id="taskInput" type="text" placeholder="e.g. Learn props"
+              aria-label="New task" required><button class="primary" type="submit">Add</button></form>
+          <div class="task-list" id="taskList"></div>
+          <div class="row" style="justify-content:space-between"><span id="taskSummary" class="small">0 tasks
+              left</span><button id="clearDone" class="ghost">Clear completed</button></div>
+          <p id="taskMessage" class="small" style="margin-top:12px"></p>
+        </div>
+        <div>
+          <div class="label">How the core state update works</div>
+          <pre><code>// Add a task immutably
+setTasks(currentTasks =&gt; [
+  ...currentTasks,
+  newTask
+]);
+
+// Toggle one task
+setTasks(currentTasks =&gt;
+  currentTasks.map(task =&gt;
+    task.id === id
+      ? { ...task, completed: !task.completed }
+      : task
+  )
+);
+
+// Remove a task
+setTasks(currentTasks =&gt;
+  currentTasks.filter(task =&gt; task.id !== id)
+);</code></pre>
+          <p class="small">The playground is plain JavaScript for portability; in React, the same ideas belong in typed
+            state and components.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">17 · Connect to PHP / Laravel</div>
+      <h2>Frontend and backend have different responsibilities.</h2>
+      <div class="stack" style="max-width:780px;margin:0 auto">
+        <div class="flowbox"><strong>React + TypeScript</strong>
+          <p class="small">UI, forms, state, feedback</p>
+        </div>
+        <div class="arrow">↕ HTTP request / response · JSON</div>
+        <div class="flowbox"><strong>PHP / Laravel API</strong>
+          <p class="small">Validation, business rules, authentication, authorization</p>
+        </div>
+        <div class="arrow">↕</div>
+        <div class="flowbox"><strong>Database</strong>
+          <p class="small">Persistent records</p>
+        </div>
+      </div>
+      <div class="callout">Frontend validation helps users. It is not a security boundary: the backend must validate and
+        authorize every relevant request.</div>
+      <pre style="margin-top:18px"><code>const response = await fetch("/api/tasks");
+if (!response.ok) throw new Error("Failed to load tasks");
+const data = await response.json();</code></pre>
+      <p class="small">TypeScript types do not validate JSON at runtime. Check untrusted API data and handle loading,
+        error, and empty states.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">18 · Avoid the traps</div>
+      <h2>Common beginner mistakes</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>❌ Mutating state directly</h3>
+          <p>Use new arrays/objects with patterns like <code>map</code>, <code>filter</code>, and spread.</p>
+        </div>
+        <div class="card">
+          <h3>❌ Confusing props and state</h3>
+          <p>Props are inputs; state represents changing data owned by a component or state owner.</p>
+        </div>
+        <div class="card">
+          <h3>❌ Calling handlers during render</h3>
+          <p>Pass a function: <code>onClick={handleClick}</code>.</p>
+        </div>
+        <div class="card">
+          <h3>❌ Ignoring keys and types</h3>
+          <p>Use stable list keys and meaningful types instead of reaching for <code>any</code>.</p>
+        </div>
+        <div class="card">
+          <h3>❌ One giant component</h3>
+          <p>Split the UI into focused pieces with clear responsibilities.</p>
+        </div>
+        <div class="card">
+          <h3>❌ Trusting frontend validation</h3>
+          <p>Backend validation and authorization are still required.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">19 · Quick knowledge check</div>
+      <h2>Check your understanding.</h2>
+      <div class="card" id="quizCard">
+        <div class="label" id="quizCount">Question 1 of 5</div>
+        <h3 id="quizQuestion">What is the main purpose of props?</h3>
+        <div id="quizOptions"></div>
+        <div id="quizFeedback" class="feedback" aria-live="polite"></div>
+        <div class="row" style="justify-content:space-between;margin-top:10px"><span class="small" id="quizScore">Score:
+            0</span><button class="primary" id="quizNext" disabled>Next question →</button></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">20 · Take it forward</div>
+      <h2>Ship a small thing. Explain how it works.</h2>
+      <div class="two-col">
+        <div class="card">
+          <h3>Junior developer checklist</h3>
+          <ul class="checklist">
+            <li>Can explain components and JSX.</li>
+            <li>Can pass typed props.</li>
+            <li>Can manage state with <code>useState</code>.</li>
+            <li>Can render lists and controlled forms.</li>
+            <li>Can explain the frontend/backend boundary.</li>
+            <li>Can document setup in a README.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Where to go next</h3>
+          <p>1. <strong>Effects and API data</strong> — loading, errors, cleanup.</p>
+          <p>2. <strong>Routing</strong> — multiple views/pages.</p>
+          <p>3. <strong>Forms and validation</strong> — robust user input.</p>
+          <p>4. <strong>Testing</strong> — verify behavior.</p>
+          <p>5. <strong>Accessibility</strong> — usable by more people.</p>
+          <div class="callout">React doesn't erase what you learned. It gives that knowledge a reusable structure.</div>
+        </div>
+      </div>
+      <p class="lead">Thank you. Questions?</p>
+    </section>
+  </div>
+
+  <div class="toc" id="toc" aria-label="Slide overview">
+    <div class="row" style="justify-content:space-between;margin-bottom:22px">
+      <div>
+        <div class="kicker">Navigation</div>
+        <h2 style="margin:0">Slide overview</h2>
+      </div><button class="navbtn" id="closeToc" aria-label="Close overview">✕</button>
+    </div>
+    <div class="toc-grid" id="tocGrid"></div>
+  </div>
+  <footer class="footer">
+    <div class="progress"><span id="progressBar"></span></div>
+    <div class="brand">React + TypeScript · Junior Dev Workshop</div>
+    <button class="navbtn" id="prevBtn" aria-label="Previous slide">←</button>
+    <div class="counter" id="slideCounter">01 / 20</div>
+    <button class="navbtn" id="nextBtn" aria-label="Next slide">→</button>
+    <div class="spacer"></div>
+    <button class="navbtn" id="overviewBtn" title="Slide overview (O)" aria-label="Open slide overview">▦</button>
+    <button class="navbtn" id="fullscreenBtn" title="Fullscreen (F)" aria-label="Toggle fullscreen">⛶</button>
+  </footer>
+
+  <script>
+    (() => {
+      const slides = [...document.querySelectorAll('.slide')];
+      let current = 0;
+      const counter = document.getElementById('slideCounter');
+      const progress = document.getElementById('progressBar');
+      const prev = document.getElementById('prevBtn');
+      const next = document.getElementById('nextBtn');
+      const toc = document.getElementById('toc');
+      const tocGrid = document.getElementById('tocGrid');
+      const titles = [
+        'From Vanilla JS to React + TypeScript', 'The learning path', 'When UI updates become manual work',
+        'Describe the UI for the current state', 'Start a React + TypeScript project', 'Make your own reusable building blocks',
+        'HTML-like syntax, with JavaScript expressions', 'Props are inputs to a component', 'Catch type mistakes before runtime',
+        'Make component contracts clear', 'React changes composition—not CSS itself', 'Props vs state',
+        'Let the interface respond to state', 'React events + forms', 'Render UI from data', 'Build a task tracker',
+        'Task tracker playground', 'Frontend and backend responsibilities', 'Common beginner mistakes', 'Knowledge check', 'Ship a small thing'
+      ];
+      // There are 20 slides. Titles in the overview are derived from slide headings where possible.
+      const slideTitles = slides.map((s, i) => {
+        const h = s.querySelector('h1,h2');
+        return h ? h.textContent.replace(/\s+/g, ' ').trim() : `Slide ${i + 1}`;
+      });
+      slides.forEach((s, i) => {
+        const b = document.createElement('button');
+        b.innerHTML = `<span>SLIDE ${String(i + 1).padStart(2, '0')}</span>${slideTitles[i]}`;
+        b.addEventListener('click', () => { show(i); toc.classList.remove('open'); });
+        tocGrid.appendChild(b);
+      });
+      function show(index) {
+        current = Math.max(0, Math.min(slides.length - 1, index));
+        slides.forEach((s, i) => s.classList.toggle('active', i === current));
+        counter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+        progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+        prev.disabled = current === 0;
+        next.disabled = current === slides.length - 1;
+        document.title = `${slideTitles[current]} — React + TypeScript`;
+        slides[current].scrollTop = 0;
+      }
+      function move(n) { show(current + n); }
+      prev.addEventListener('click', () => move(-1));
+      next.addEventListener('click', () => move(1));
+      document.getElementById('overviewBtn').addEventListener('click', () => toc.classList.add('open'));
+      document.getElementById('closeToc').addEventListener('click', () => toc.classList.remove('open'));
+      toc.addEventListener('click', e => { if (e.target === toc) toc.classList.remove('open') });
+      document.getElementById('fullscreenBtn').addEventListener('click', async () => {
+        try { if (!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen(); } catch (e) { }
+      });
+      document.addEventListener('keydown', e => {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+          if (e.key === 'Escape') { document.activeElement.blur(); } else return;
+        }
+        if (toc.classList.contains('open')) { if (e.key === 'Escape' || e.key === 'o' || e.key === 'O') toc.classList.remove('open'); return; }
+        if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); move(1); }
+        if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); move(-1); }
+        if (e.key === 'Home') show(0); if (e.key === 'End') show(slides.length - 1);
+        if (e.key === 'o' || e.key === 'O') toc.classList.add('open');
+        if (e.key === 'f' || e.key === 'F') document.getElementById('fullscreenBtn').click();
+      });
+      let touchX = null;
+      document.addEventListener('touchstart', e => { touchX = e.changedTouches[0].screenX }, { passive: true });
+      document.addEventListener('touchend', e => { if (touchX === null) return; const dx = e.changedTouches[0].screenX - touchX; if (Math.abs(dx) > 70) move(dx < 0 ? 1 : -1); touchX = null }, { passive: true });
+      show(0);
+
+      // Interactive props demo
+      const greetName = document.getElementById('greetName');
+      greetName.addEventListener('input', () => { document.getElementById('greetPreview').textContent = `Hello, ${greetName.value || '...'}!`; });
+
+      // Interactive counter
+      let count = 0;
+      const renderCount = () => document.getElementById('counterValue').textContent = count;
+      document.getElementById('counterPlus').addEventListener('click', () => { count++; renderCount(); });
+      document.getElementById('counterMinus').addEventListener('click', () => { count--; renderCount(); });
+      document.getElementById('counterReset').addEventListener('click', () => { count = 0; renderCount(); });
+
+      // Controlled input demo
+      document.getElementById('nameInput').addEventListener('input', e => document.getElementById('namePreview').textContent = e.target.value || '...');
+
+      // Interactive task tracker
+      let tasks = [
+        { id: 1, title: 'Learn JSX', completed: true },
+        { id: 2, title: 'Practice props', completed: false },
+        { id: 3, title: 'Use useState', completed: false }
+      ];
+      let nextTaskId = 4;
+      const list = document.getElementById('taskList');
+      const summary = document.getElementById('taskSummary');
+      const message = document.getElementById('taskMessage');
+      function renderTasks() {
+        list.innerHTML = '';
+        if (tasks.length === 0) { message.textContent = 'No tasks yet. Add one above to get started.'; }
+        else { message.textContent = 'Try adding, completing, and deleting tasks.'; }
+        tasks.forEach(task => {
+          const row = document.createElement('div'); row.className = 'task' + (task.completed ? ' done' : '');
+          const check = document.createElement('input'); check.type = 'checkbox'; check.checked = task.completed; check.setAttribute('aria-label', `Mark ${task.title} complete`);
+          check.addEventListener('change', () => { tasks = tasks.map(t => t.id === task.id ? { ...t, completed: check.checked } : t); renderTasks(); });
+          const title = document.createElement('span'); title.textContent = task.title;
+          const remove = document.createElement('button'); remove.className = 'remove'; remove.textContent = '×'; remove.setAttribute('aria-label', `Delete ${task.title}`);
+          remove.addEventListener('click', () => { tasks = tasks.filter(t => t.id !== task.id); renderTasks(); });
+          row.append(check, title, remove); list.appendChild(row);
+        });
+        const remaining = tasks.filter(t => !t.completed).length;
+        summary.textContent = `${remaining} task${remaining === 1 ? '' : 's'} left · ${tasks.length} total`;
+      }
+      document.getElementById('taskForm').addEventListener('submit', e => {
+        e.preventDefault(); const input = document.getElementById('taskInput'); const title = input.value.trim();
+        if (!title) return;
+        tasks = [...tasks, { id: nextTaskId++, title, completed: false }]; input.value = ''; renderTasks(); input.focus();
+      });
+      document.getElementById('clearDone').addEventListener('click', () => { tasks = tasks.filter(t => !t.completed); renderTasks(); });
+      renderTasks();
+
+      // Interactive knowledge check
+      const questions = [
+        { q: 'What is the main purpose of props?', a: ['To pass data into a component', 'To store data permanently in a database', 'To style every element automatically'], correct: 0, why: 'Props are inputs that configure a component.' },
+        { q: 'What should usually trigger a state-driven UI update?', a: ['Changing any ordinary variable', 'Calling the state setter', 'Editing the DOM by hand'], correct: 1, why: 'A state setter schedules a React update.' },
+        { q: 'Why use a stable key when rendering a list?', a: ['To add CSS automatically', 'To let React identify items across updates', 'To make every item clickable'], correct: 1, why: 'Keys help React match items when a list changes.' },
+        { q: 'What does TypeScript guarantee about fetched JSON?', a: ['It validates every field at runtime', 'It encrypts the response', 'Nothing by itself; runtime data still needs validation'], correct: 2, why: 'Type annotations do not validate untrusted JSON at runtime.' },
+        { q: 'Can React replace PHP/Laravel backend responsibilities?', a: ['Yes, React handles database security', 'No, backend logic and authorization remain backend responsibilities', 'Only when TypeScript is enabled'], correct: 1, why: 'React is a UI library; the backend still validates and authorizes requests.' }
+      ];
+      let qi = 0, score = 0, answered = false;
+      const qEl = document.getElementById('quizQuestion'), opts = document.getElementById('quizOptions'), feedback = document.getElementById('quizFeedback'), qCount = document.getElementById('quizCount'), scoreEl = document.getElementById('quizScore'), qNext = document.getElementById('quizNext');
+      function renderQuestion() {
+        answered = false; const q = questions[qi]; qCount.textContent = `Question ${qi + 1} of ${questions.length}`; qEl.textContent = q.q; opts.innerHTML = ''; feedback.textContent = ''; qNext.disabled = true; qNext.textContent = qi === questions.length - 1 ? 'See results ↻' : 'Next question →';
+        q.a.forEach((answer, i) => { const b = document.createElement('button'); b.className = 'quiz-option'; b.textContent = answer; b.addEventListener('click', () => choose(i, b)); opts.appendChild(b); });
+      }
+      function choose(index, button) {
+        if (answered) return; answered = true; const q = questions[qi]; const buttons = [...opts.querySelectorAll('button')];
+        buttons.forEach((b, i) => { b.disabled = true; if (i === q.correct) b.classList.add('correct'); });
+        if (index === q.correct) { score++; feedback.textContent = 'Correct! ' + q.why; feedback.style.color = 'var(--green)'; }
+        else { button.classList.add('wrong'); feedback.textContent = 'Not quite. ' + q.why; feedback.style.color = 'var(--pink)'; }
+        scoreEl.textContent = `Score: ${score} / ${questions.length}`; qNext.disabled = false;
+      }
+      qNext.addEventListener('click', () => { if (!answered) return; if (qi < questions.length - 1) { qi++; renderQuestion(); } else { qi = 0; score = 0; scoreEl.textContent = 'Score: 0'; qNext.textContent = 'Next question →'; renderQuestion(); } });
+      renderQuestion();
+
+      // Syntax highlighting for the code examples throughout the deck.
+      if (window.hljs) {
+        document.querySelectorAll('pre code').forEach((block) => {
+          window.hljs.highlightElement(block);
+        });
+      }
+
+      // Week 2 custom useState + manual DOM-rendering demo, represented as a live interaction.
+      let week2Count = 0;
+      let week2Title = 'Hello World';
+      const renderWeek2Demo = () => {
+        document.getElementById('week2Title').textContent = week2Title;
+        document.getElementById('week2Presses').textContent = `Button pressed ${week2Count} times`;
+      };
+      document.getElementById('week2Press').addEventListener('click', () => {
+        week2Count += 1;
+        renderWeek2Demo();
+      });
+      document.querySelectorAll('.week2TitleBtn').forEach((button) => {
+        button.addEventListener('click', () => {
+          week2Title = button.dataset.title;
+          renderWeek2Demo();
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>
