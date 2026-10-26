@@ -59,14 +59,19 @@ RUN composer install --no-dev --no-interaction --no-scripts --no-progress \
     && composer clear-cache
 
 # Application bootstrap: .env, app key, package discovery and database
-RUN cp .env.example .env \
-    && touch database/database.sqlite \
+# The SQLite file lives in its own directory so it can be volume-mounted.
+# NOTE: `artisan serve` forwards only $_ENV (not the real environment) to its
+# worker process, so container-level ENV vars do not reach the app - they are
+# written into .env instead.
+RUN mkdir -p database/data \
+    && cp .env.example .env \
+    && printf '\nDB_DATABASE=/app/database/data/notes.sqlite\n' >> .env \
+    && sed -i 's|^APP_URL=.*|APP_URL=http://localhost:15000|' .env \
+    && touch database/data/notes.sqlite \
     && php artisan key:generate --ansi \
     && php artisan package:discover --ansi \
     && php artisan migrate --force --ansi \
     && rm -f storage/logs/*.log
-
-ENV APP_URL=http://localhost:15000
 
 EXPOSE 15000
 

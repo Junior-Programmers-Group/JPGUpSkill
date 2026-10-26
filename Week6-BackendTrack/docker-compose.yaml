@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: jpgupskill/laravel-week6:latest
+    container_name: laravel-week6-app
+    ports:
+      - "15000:15000"
+    restart: unless-stopped
+    volumes:
+      # Keep the SQLite database outside the container so notes survive
+      # `docker compose down` / image rebuilds.
+      - notes-db:/app/database/data
+
+volumes:
+  notes-db:

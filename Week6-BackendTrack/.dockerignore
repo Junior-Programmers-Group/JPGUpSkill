@@ -19,7 +19,7 @@ bootstrap/cache/*.php
 
 Dockerfile
 .dockerignore
-Jenkinsfile
+docker-compose.yaml
 README.md
 AGENTS.md
 CLAUDE.md
